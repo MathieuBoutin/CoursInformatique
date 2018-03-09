@@ -1,19 +1,18 @@
 #include <iostream>
-#include "duree.h"
+
 using namespace std;
 
+// Fonctions permettant de coder les operateurs.
 
-Duree::Duree(int heures, int minutes, int secondes): m_heures(heures), m_minutes(minutes), m_secondes(secondes)
-{
 
-}
-
-bool Duree::estEgal(Duree const &b) const
+bool Objet::estEgal(Objet const &b) const
 {
     return (m_heures == b.m_heures && m_minutes == b.m_minutes && m_secondes == b.m_secondes);     //Teste si a.m_heure == b.m_heure etc.  
 }
 
-bool Duree::estInf(Duree const &b) const
+
+
+bool Objet::estInf(Objet const &b) const
 {
     if (m_heures < b.m_heures)
     {
@@ -33,23 +32,38 @@ bool Duree::estInf(Duree const &b) const
     }
     
 }
-bool operator==(Duree const &a, Duree const &b)
+
+
+
+// Les operateurs !!!!!!
+
+bool operator==(Objet const &a, Objet const &b)
 {
     return a.estEgal(b) ;
    
 }
 
-bool operator!= (Duree const &a , Duree const &b)
+bool operator!= (Objet const &a , Objet const &b)
 {
     return !(a==b);
 }
 
-bool operator<(Duree const &a , Duree const &b)
+bool operator<(Objet const &a , Objet const &b)
 {
     return (a.estInf(b) && !(a==b));
 }
 
-bool operator>(Duree const &a , Duree const &b)
+bool operator>(Objet const &a , Objet const &b)
 {
     return (!(a.estInf(b)) && !(a.estEgal(b)));
+}
+
+bool operator<=(Objet const &a , Objet const &b)
+{
+    return a.estInf(b);
+}
+
+bool operator>(Objet const &a , Objet const &b)
+{
+    return !(a.estInf(b));
 }
