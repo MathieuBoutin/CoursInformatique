@@ -297,7 +297,7 @@ matrix_t algoGradConjug(matrix_t A, matrix_t B, float epsi, int* errorCode)
 	d=zeroMatrix(A.line,1,errorCode);
 	q=zeroMatrix(A.line, 1,errorCode);
 
-	b=sqrt(abs(produitscalaireVecteur(B,B,errorCode)));
+	b=sqrt(produitscalaireVecteur(B,B,errorCode));
 	
 	
 	/*initialisation */
@@ -327,13 +327,16 @@ matrix_t algoGradConjug(matrix_t A, matrix_t B, float epsi, int* errorCode)
 
 }
 
-matrix_t secondMembre(int N,int* errorCode)
+matrix_t secondMembre(matrix_t A,int N,int* errorCode)
 {
-	int i;
+	int i,j;
 	matrix_t B = zeroMatrix(N,1,errorCode);
 	for(i=0;i<N;i++)
 	{
-		B.value[i][0]=1;
+		for (j=0;j<N;j++)
+		{
+			B.value[i][0]+=A.value[i][j];
+		}
 	}
 	return B;
 }
@@ -344,20 +347,45 @@ int main()
 	int N=20;
 	int errorCode;
 	float epsi= 1e-6;
-	double y;
+	double y,b,w;
+	double long  t;
 	matrix_t X;
 	matrix_t Y;
 	matrix_t A;
-	matrix_t B;
+	matrix_t B,q,r,d;
 	B=zeroMatrix(N,1,&errorCode);
 	A=zeroMatrix(N,1,&errorCode);
 	Y=zeroMatrix(N,1,&errorCode);
-	X=zeroMatrix(N,N,&errorCode);
-	B=secondMembre(N,&errorCode);
+	X=zeroMatrix(N,1,&errorCode);
+	/*q=zeroMatrix(N,1,&errorCode);
+	r=zeroMatrix(N,1,&errorCode);
+	d=zeroMatrix(N,1,&errorCode);*/
+	
 	A=creationPascal(N);
 	
-	X=algoGradConjug(A,B,epsi,&errorCode);
-	printMatrix(X);
+	B=secondMembre(A,N,&errorCode);
+	printMatrix(B);
+	
+	r = soustractionMatrix(multiply(A,X,&errorCode),B,&errorCode);
+	printf("r \n");
+	printMatrix(r);
+	printf("\n");
+	d = opposeMatrix(r,&errorCode);
+	printf("d \n");
+	printMatrix(d);
+	printf("\n");
+	q = multiply(A,d,&errorCode);
+	printf("q\n");
+	printMatrix(q);
+	printf("\n");
+	b=sqrt(produitscalaireVecteur(B,B,&errorCode));
+	printf("b: %lf \n",b);
+	w=produitscalaireVecteur(d,q,&errorCode);
+	printf("w: %lf \n",w);
+	t = (double long)b/w;
+	printf("t: %le \n", t);
+	/*X=algoGradConjug(A,B,epsi,&errorCode);
+	printMatrix(X);*/
 	return 0;
 }
 			
